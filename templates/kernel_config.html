@@ -1,0 +1,378 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Column Menu Part To Show the various menu available -->
+        {% include "includes/_sidebar.html" %}
+        
+        <!-- Right Column (After) Part To Show the result image -->
+        <div class="menu-right-part col-md-9">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-12 mr-0">
+                                        <form action="{{ url_for('kernel_configuration') }}" method="POST" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="border rounded p-3 mt-5 bg-light">
+                                                        <!-- Filter Type Options -->
+                                                        <h2 class="mt-2 mb-3">Filter Type</h2>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-12 ml-3">
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="filter_choice" id="filter_choice" value="lowpass" required checked>
+                                                                    Lowpass Filter
+                                                                </label>
+                                                                <br>
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="filter_choice" id="filter_choice" value="highpass">
+                                                                    Highpass Filter
+                                                                </label>
+                                                                <br>
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="filter_choice" id="filter_choice" value="bandpass">
+                                                                    Bandpass Filter
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="border rounded p-3 mt-5 bg-light">
+                                                        <!-- Kernel Configuration Options -->
+                                                        <h2 class="mt-2 mb-3">Kernel Configuration</h2>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-md-12 pl-5">
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="kernel_choice" id="kernel_choice" value="default" required checked>
+                                                                    Default Random (3x3 Kernel)
+                                                                </label>
+                                                                <br>
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="kernel_choice" id="kernel_choice" value="custom_size">
+                                                                    Custom Size Only
+                                                                </label>
+                                                                <br>
+                                                                <label class="mb-3">
+                                                                    <input type="radio" name="kernel_choice" id="kernel_choice" value="custom_size_and_matrix">
+                                                                    Custom Size and Matrix Elements
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Input for kernel size (displayed based on choice) -->
+                                            <div class="mt-5 mb-3" id="kernel-size-input" style="display: none;">
+                                                <div class="border pt-4 pb-3 pl-4 pr-4 mt-3 bg-light rounded">
+                                                    <label for="kernel-size"><b>Matrix Size (N):</b></label>
+                                                    <input type="number" id="kernel-size" name="kernel-size" min="3">
+                                                </div>
+                                            </div>
+
+                                            <!-- Input for kernel matrix elements (displayed based on choice) -->
+                                            <div class="m-4" id="kernel-matrix-input" style="display: none;">
+                                            </div>
+                                            <button type="submit" id="nextButton" class="btn btn-primary mt-3 mb-5 pr-4 pl-4" disabled>Next</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div id="matrixContainer">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>  
+
+    </div>
+</div>
+
+<!-- JavaScript to show/hide input fields based on radio button choice -->
+<script>
+    // Function to calculate the sum of matrix elements
+    function calculateMatrixSum() {
+            const matrixInputs = document.querySelectorAll("input[name^='matrix[']");
+            let sum = 0;
+
+            matrixInputs.forEach((input) => {
+                const value = parseFloat(input.value);
+                if (!isNaN(value)) {
+                    sum += value;
+                }
+            });
+
+            return sum;
+        }
+
+    // Function to validate the matrix sum based on the filter type
+    function validateMatrixSum() {
+        const filterType = document.querySelector("input[name='filter_choice']:checked").value;
+        const kernelChoice = document.querySelector("input[name='kernel_choice']:checked").value;
+        const matrixSize = parseInt(document.getElementById("kernel-size").value);
+        const matrixInputs = document.querySelectorAll("input[name^='matrix[']");
+
+        let filledCount = 0; // Counter for filled fields
+        let allValidValues = true;
+
+        // Calculate the sum and track filled fields
+        matrixInputs.forEach((input) => {
+            const value = parseFloat(input.value);
+            if (!isNaN(value)) {
+                filledCount++;
+
+                if (filterType === "lowpass") {
+                    if (value < 0 || value > 1) {
+                        allValidValues = false;
+                    }
+                }
+            }
+        });
+
+        // Handle the logic based on kernelChoice
+        if (kernelChoice === "default") {
+            // For default kernel choice, enable the "Next" button
+            document.getElementById("nextButton").removeAttribute("disabled");
+        } else if (kernelChoice === "custom_size") {
+            // For custom_size kernel choice, handle matrix size input validation
+            if (matrixSize >= 3) {
+                document.getElementById("nextButton").removeAttribute("disabled");
+            } else {
+                // Matrix size is invalid
+                document.getElementById("nextButton").setAttribute("disabled", "true");
+            }
+        } else if (kernelChoice === "custom_size_and_matrix") {
+            // For custom_size_and_matrix kernel choice, wait for all matrix elements
+
+            if (filledCount === matrixInputs.length && matrixInputs.length === matrixSize * matrixSize) {
+                const sum = calculateMatrixSum();
+                console.log(sum);
+                if ((
+                    (filterType === "lowpass" && sum === 1) ||
+                    (filterType === "highpass" && sum === 0) ||
+                    (filterType === "bandpass" && sum !== 0)) && allValidValues
+                ) {
+                    document.getElementById("nextButton").removeAttribute("disabled");
+                } else {
+                    // Matrix sum does not meet the filter criteria
+                    document.getElementById("nextButton").setAttribute("disabled", "true");
+                    alert("Matrix sum does not meet the filter criteria. Please adjust the matrix elements.");
+                }
+            } else {
+                // Not all matrix elements are filled, disable the "Next" button
+                document.getElementById("nextButton").setAttribute("disabled", "true");
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get all the elements with the class 'btn-link' (accordion buttons)
+        const accordionButtons = document.querySelectorAll('.btn-link');
+
+        // Add click event listeners to each accordion button
+        accordionButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                // Get the collapse target associated with the clicked button
+                const targetId = button.getAttribute('data-target');
+                const targetCollapse = document.querySelector(targetId);
+
+                // Close all other accordions except the one that was clicked
+                accordionButtons.forEach((otherButton) => {
+                    if (otherButton !== button) {
+                        const otherTargetId = otherButton.getAttribute('data-target');
+                        const otherTargetCollapse = document.querySelector(otherTargetId);
+
+                        // Close other accordions
+                        otherTargetCollapse.classList.remove('show');
+                    }
+                });
+            });
+        });
+
+        const kernelChoice = document.querySelectorAll("input[name='kernel_choice']");
+        const filterChoice = document.querySelectorAll("input[name='filter_choice']");
+        const kernelSizeContainer = document.getElementById("kernel-size-input");
+        const kernelSizeInput = document.getElementById("kernel-size");
+        const kernelMatrixInput = document.getElementById("kernel-matrix-input");
+
+        function generateMatrixFields(matrixSize) {
+            // Clear any existing matrix fields
+            kernelMatrixInput.innerHTML = "";
+            
+            // add element p with italic embellishment from kernelMatrixInput
+            kernelMatrixInput.appendChild(document.createElement("p"))
+                .appendChild(document.createTextNode("Masukkan elemen-elemen matriks kernel Anda di sini!"));
+
+            // Create N by N input fields
+            for (let i = 0; i < matrixSize; i++) {
+                for (let j = 0; j < matrixSize; j++) {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.name = `matrix[${i}][${j}]`;
+                    input.style.width = "40px";
+                    input.style.margin = "5px";
+                    kernelMatrixInput.appendChild(input);
+
+                    // Add an event listener to each input for real-time validation
+                    input.addEventListener("input", function () {
+                        validateMatrixSum();
+                        const filterType = document.querySelector("input[name='filter_choice']:checked").value;
+                        if (filterType === "lowpass") {
+                            if (this.value < 0 || this.value > 1) {
+                                alert("Antara 0 hingga 1!");
+                                this.value = "";
+                            }
+                        }
+                    });
+                }
+
+                // Add a line break for each row
+                const lineBreak = document.createElement("br");
+                kernelMatrixInput.appendChild(lineBreak);
+            }
+        }
+
+        function updateKernelInputVisibility() {
+            const selectedChoice = document.querySelector("input[name='kernel_choice']:checked");
+            
+            if (selectedChoice) {
+                const choiceValue = selectedChoice.value;
+                
+                if (choiceValue === "custom_size" || choiceValue === "custom_size_and_matrix") {
+                    kernelSizeContainer.style.display = "block";
+                } else {
+                    kernelSizeContainer.style.display = "none";
+                }
+
+                if (choiceValue === "custom_size_and_matrix") {
+                    const kernelSizeValue = kernelSizeInput.value;
+                    if (kernelSizeValue === "") {
+                        // Handle empty input gracefully, you can choose to display the matrix fields or not
+                        kernelMatrixInput.style.display = "none";
+                    } else {
+                        const matrixSize = parseInt(kernelSizeValue);
+
+                        if (!isNaN(matrixSize) && matrixSize >= 3) {
+                            generateMatrixFields(matrixSize);
+                            kernelMatrixInput.style.display = "block";
+                        } else {
+                            alert("Please enter a valid matrix size (N >= 3).");
+                            kernelMatrixInput.style.display = "none";
+                            kernelSizeInput.value = "";
+                        }
+                    }
+                } else {
+                    kernelMatrixInput.style.display = "none";
+                }
+            }
+            
+        }
+
+        let validationTimer;
+
+        // Event listener for matrix size input changes
+        document.getElementById("kernel-size").addEventListener("input", function () {
+            validateMatrixSum();
+        });
+
+        const matrixInputs = document.querySelectorAll("input[name^='matrix[']");
+        matrixInputs.forEach((elem) => {
+            elem.addEventListener("input", function () {
+                clearTimeout(validationTimer);
+
+                validationTimer = setTimeout(() => {
+                    validateMatrixSum();
+                }, 200);
+            });
+        });
+
+        kernelChoice.forEach((radio) => {
+            radio.addEventListener("change", function () {
+                updateKernelInputVisibility();
+                validateMatrixSum();
+            });
+        });
+
+        filterChoice.forEach((radio) => {
+            radio.addEventListener("change", function () {
+                validateMatrixSum();
+            });
+        });
+        
+        
+        // Add an event listener to detect changes in kernelSizeInput value
+        kernelSizeContainer.addEventListener("input", function () {
+            // Clear the timer if it's already running
+            clearTimeout(validationTimer);
+            
+            // Start a timer to validate the input 1 second after the user stops typing
+            validationTimer = setTimeout(() => {
+                updateKernelInputVisibility();
+            }, 1000);
+        });
+
+
+        // Initial setup
+        updateKernelInputVisibility();
+        validateMatrixSum();
+    });
+</script> 
+<script>
+    // take one element div called class "card-header" and checked if its clicked or not.
+    // If clicked, the left border should always still there by adding classlist active
+    // until the user click another menu
+    const cardHeader = document.querySelectorAll('.card-header');
+
+    cardHeader.forEach((header) => {
+        header.addEventListener('click', () => {
+            cardHeader.forEach((otherHeader) => {
+                if (otherHeader !== header) {
+                    otherHeader.classList.remove('active-header');
+                }
+            });
+            header.classList.add('active-header');
+        });
+    });
+
+</script>
+
+<style>
+    .menu-right-part {
+        width: 100% !important;
+        height: 100%;
+        background-color: var(--light) !important;
+    }
+    
+    .menu-right-part .container {
+        min-width: 90% !important;
+        max-height: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .menu-right-part  .container:hover {
+        overflow-y: auto;
+        scrollbar-width: 4px;
+    }
+
+    .menu-right-part .container::-webkit-scrollbar-thumb {
+        background-color: #888; /* Color of the scrollbar thumb */
+        border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+    }
+
+    .menu-right-part > .jumbotron {
+        height: 100%;
+        width: 100% !important;
+        padding-top: 0px !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+        background-color: var(--light) !important;
+    }
+</style>
+{% endblock %}

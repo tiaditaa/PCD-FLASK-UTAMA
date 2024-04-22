@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Column Menu Part To Show the various menu available -->
+        {% include "includes/_sidebar.html" %}
+        
+        <!-- Right Column (After) Part To Show the result image -->
+        <div class="menu-right-part col-md-9">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <div class="row">
+                        <h2 class="mt-3">Operasi Morfologi - Soal 1</h2>
+                    </div>
+                    <div>
+                        <hr/>
+                    </div>
+                    <h4>Jumlah gerigi: {{ jumlah_gerigi }}</h4>
+                    <br>
+                    <div>
+                        <ul style="list-style: none;">
+                            <div class="row">
+                                {% for image_file in image_files %}
+                                    <li>
+                                        <div class="column" style="align-items: center; justify-content: center; text-align: center;">
+                                            <p>{{ image_file }}</p>
+                                            <img src="{{ url_for('static', filename='img/gerigi/' + image_file) }}" alt="{{ image_file }}" style="width: 200px; margin-bottom: 32px;">
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all the elements with the class 'btn-link' (accordion buttons)
+    const accordionButtons = document.querySelectorAll('.btn-link');
+
+    // Add click event listeners to each accordion button
+    accordionButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            // Get the collapse target associated with the clicked button
+            const targetId = button.getAttribute('data-target');
+            const targetCollapse = document.querySelector(targetId);
+
+            // Close all other accordions except the one that was clicked
+            accordionButtons.forEach((otherButton) => {
+                if (otherButton !== button) {
+                    const otherTargetId = otherButton.getAttribute('data-target');
+                    const otherTargetCollapse = document.querySelector(otherTargetId);
+
+                    // Close other accordions
+                    otherTargetCollapse.classList.remove('show');
+                }
+            });
+        });
+    });
+
+    // Get references to the form and input elements
+    const matchingUploadForm = document.getElementById("uploadForm");
+
+    // Add an event listener to the form
+    matchingUploadForm.addEventListener("submit", function (e) {
+        // Prevent the default form submission
+        e.preventDefault();
+
+        // Set the form's action attribute with query parameters
+        matchingUploadForm.action = `/generate-filtered-images?action=start-game`;
+
+        // Submit the form programmatically
+        matchingUploadForm.submit();
+    });
+</script>
+
+<script>
+    // take one element div called class "card-header" and checked if its clicked or not.
+    // If clicked, the left border should always still there by adding classlist active
+    // until the user click another menu
+    const cardHeader = document.querySelectorAll('.card-header');
+
+    cardHeader.forEach((header) => {
+        header.addEventListener('click', () => {
+            cardHeader.forEach((otherHeader) => {
+                if (otherHeader !== header) {
+                    otherHeader.classList.remove('active-header');
+                }
+            });
+            header.classList.add('active-header');
+        });
+    });
+
+</script>
+
+<style>
+    .menu-right-part {
+        width: 100% !important;
+        height: 100%;
+        background-color: var(--light) !important;
+    }
+    
+    .menu-right-part .container {
+        min-width: 90% !important;
+        max-height: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .menu-right-part  .container:hover {
+        overflow-y: auto;
+        scrollbar-width: 4px;
+    }
+
+    .menu-right-part .container::-webkit-scrollbar-thumb {
+        background-color: #888; /* Color of the scrollbar thumb */
+        border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+    }
+
+    .menu-right-part > .jumbotron {
+        height: 100%;
+        width: 100% !important;
+        padding-top: 0px !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+        background-color: var(--light) !important;
+    }
+</style>
+{% endblock %}

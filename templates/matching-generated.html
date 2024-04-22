@@ -1,0 +1,348 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Column Menu Part To Show the various menu available -->
+        {% include "includes/_sidebar.html" %}
+        
+        <!-- Right Column (After) Part To Show the result image -->
+        <div class="menu-right-part col-md-9">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">                        
+                            <h2 class="mt-3">Flip All Cards!</h3>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-12">
+                            <p>Tekan setiap kartu untuk melihat gambar dibaliknya. Cari pasangan kartu yang gambarnya bersesuaian. Dapatkan skor maksimum 14 dalam permainan ini. Gunakan tombol Hint, Surrender, ataupun Reset yang Anda jika diinginkan.</p>
+                        </div>
+                        <div class="col-md-12">
+                            <h5>Score : <span id="matching-score">0</span></h5>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn btn-outline-primary mr-3" id="btn-hint">Hint</button>
+                            <button class="btn btn-outline-danger mr-3" id="btn-surrender">Surrender</button>
+                            <button class="btn btn-outline-secondary" id="btn-reset">Reset</button>
+                            <form action="{{ url_for('matching_game') }}" method="GET" enctype="multipart/form-data">
+                                <button type="submit" class="btn btn-outline-primary col-md-12" id="btn-back-to-home" style="display: none;"><span style="white-space: normal;">Back To Home</span></button>
+                            </form>
+                        </div>
+                        <div class="col-md-12 image-container ml-3">
+                            <div class="row mt-4 row-card" data-file-paths="{{ file_paths }}">
+                                <!-- Loop through the file_paths list and generate <img> tags -->
+                                {% for file_path in file_paths %}
+                                    <div>
+                                        <div class="cards mr-3">
+                                            <div class="card-inner">
+                                                <div class="card-back">
+                                                    <!-- Real image -->
+                                                    <img src="{{ url_for('static', filename=file_path) }}"
+                                                        alt="{{ file_path }}" id="{{ file_path}}"
+                                                        style="margin: 2px; width: 100%; border: 2px solid var(--primary) !important;"
+                                                        class="card-img border"
+                                                    >
+                                                </div>
+                                                <div class="card-front">
+                                                    <img src="{{ url_for('static', filename='img/matching/masked-image.jfif') }}"
+                                                        alt="masked-image" id="masked_{{ file_path }}"
+                                                        style="border: 2px solid var(--primary) !important;"
+                                                        class="card-img border"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    {% if loop.index % 4 == 0 %} <!-- Check if it's the 4th image, then start a new row -->
+                                        </div>
+                                        <div class="row mt-3">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all the elements with the class 'btn-link' (accordion buttons)
+    const accordionButtons = document.querySelectorAll('.btn-link');
+
+    // Add click event listeners to each accordion button
+    accordionButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            // Get the collapse target associated with the clicked button
+            const targetId = button.getAttribute('data-target');
+            const targetCollapse = document.querySelector(targetId);
+
+            // Close all other accordions except the one that was clicked
+            accordionButtons.forEach((otherButton) => {
+                if (otherButton !== button) {
+                    const otherTargetId = otherButton.getAttribute('data-target');
+                    const otherTargetCollapse = document.querySelector(otherTargetId);
+
+                    // Close other accordions
+                    otherTargetCollapse.classList.remove('show');
+                }
+            });
+        });
+    });
+
+    // JavaScript code for cards
+    let flippedCards = [];
+    let matchedPairs = 0;
+    const imageContainer = document.querySelector('.row-card');
+    const file_paths = imageContainer.getAttribute('data-file-paths');
+    const maxPairs = (file_paths.match(/'(.*?)'/g).map(match => match.slice(1, -1)).length)/2;
+    const cards = document.querySelectorAll('.cards');
+    const score = document.getElementById('matching-score');
+    let selectedCard = null;
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            if (!card.classList.contains('card-flipped') && flippedCards.length < 2) {
+                card.classList.add('card-flipped');
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    const firstCardID = flippedCards[0].querySelector('.card-img').id;
+                    const secondCardID = flippedCards[1].querySelector('.card-img').id;
+                    
+                    if (firstCardID === secondCardID) {
+                        // Match found
+                        matchedPairs++;
+                        // add classList card-matched
+                        flippedCards.forEach(card => card.classList.add('card-matched'));
+
+                        // change the score 
+                        score.innerHTML = matchedPairs;
+                        if (matchedPairs === maxPairs) {
+                            // Game over, all pairs found
+                            setTimeout(() => {
+                                alert('Congratulations! You won the game.');
+                            }, 500);
+                        }
+                        // Clear flippedCards to continue playing
+                        flippedCards = [];
+                    } else {
+                        // No match, flip cards back
+                        setTimeout(() => {
+                            flippedCards.forEach(card => card.classList.remove('card-flipped'));
+                            flippedCards = [];
+                        }, 1000); // Adjust the delay as needed
+                    }
+                }
+            }
+        });
+    });
+
+    let isHinting = false;
+
+    // Function to flip all cards face up (hint)
+    function showAllImages(isReset=false, isSurrender=false, isHint=false) {
+        if (isHint) {
+            cards.forEach(card => {
+                if (!card.classList.contains('card-flipped')) {
+                    card.classList.add('card-flipped');
+                }
+            });
+        }
+
+        let index = 0;
+        const flipCardsOneByOne = () => {
+            if (index < cards.length) {
+                const card = cards[index];
+                if (!card.classList.contains('card-flipped')) {
+                    card.classList.add('card-flipped');
+
+                    // Set a delay for flipping the next card (e.g., 500 milliseconds)
+                    setTimeout(() => {
+                        // card.classList.remove('card-flipped'); // Optionally, remove the flip after a delay
+                        index++;
+                        flipCardsOneByOne();
+                    }, 100);
+                } else {
+                    index++;
+                    flipCardsOneByOne();
+                }
+            }
+        };
+
+        // Flip the cards back after 1.5 seconds (1500 milliseconds)
+        if(!isReset && !isSurrender && isHint) {
+            setTimeout(() => {
+                cards.forEach(card => {
+                    if (!card.classList.contains('card-matched')) {
+                        card.classList.remove('card-flipped');
+                    }
+                });
+                isHinting = false;
+            }, 1500);
+        } else if (isSurrender) {
+            flipCardsOneByOne();
+        } else {
+            cards.forEach(card => {
+                card.classList.add('card-flipped');
+            });
+            isHinting = false;
+        }
+    }
+
+    // Hint button click event
+    document.getElementById('btn-hint').addEventListener('click', () => {
+        if (!isHinting) {
+            isHinting = true;
+            showAllImages(false, false, true);
+            flippedCards = [];
+        }
+    });
+
+    // Surrender button click event
+    document.getElementById('btn-surrender').addEventListener('click', () => {
+        const confirmReset = confirm("Do you want to surrender?");
+        if (confirmReset) {
+            showAllImages(true, true, false)
+            
+            document.getElementById('btn-back-to-home').style.display = 'inline-block';
+            document.getElementById('btn-hint').style.display = 'none';
+            document.getElementById('btn-surrender').style.display = 'none';
+            document.getElementById('btn-reset').style.display = 'none';
+        }
+    });
+
+    // Reset button click event
+    document.getElementById('btn-reset').addEventListener('click', () => {
+        // Reset the game (you can implement this logic)
+        resetGame();
+    });
+
+    // Function to reset the game (clear any flipped cards)
+    function resetGame() {
+        cards.forEach(card => {
+            card.classList.remove('card-flipped', 'card-matched');
+        });
+        isHinting = false;
+        
+        // Reset the score
+        matchedPairs = 0;
+        score.innerHTML = matchedPairs
+
+        selectedCard = null
+
+        // Reload the page
+        window.location.reload();
+    }
+</script>
+
+<script>
+    // take one element div called class "card-header" and checked if its clicked or not.
+    // If clicked, the left border should always still there by adding classlist active
+    // until the user click another menu
+    const cardHeader = document.querySelectorAll('.card-header');
+
+    cardHeader.forEach((header) => {
+        header.addEventListener('click', () => {
+            cardHeader.forEach((otherHeader) => {
+                if (otherHeader !== header) {
+                    otherHeader.classList.remove('active-header');
+                }
+            });
+            header.classList.add('active-header');
+        });
+    });
+
+</script>
+
+<style>
+    .menu-right-part {
+        width: 100% !important;
+        height: 100%;
+        background-color: var(--light) !important;
+    }
+    
+    .menu-right-part .container {
+        min-width: 90% !important;
+        max-height: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .menu-right-part  .container:hover {
+        overflow-y: auto;
+        scrollbar-width: 4px;
+    }
+
+    .menu-right-part .container::-webkit-scrollbar-thumb {
+        background-color: #888; /* Color of the scrollbar thumb */
+        border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+    }
+
+    .menu-right-part > .jumbotron {
+        height: 100%;
+        width: 100% !important;
+        padding-top: 0px !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+        background-color: var(--light) !important;
+    }
+
+    /* for card */
+    .cards {
+        background-color: transparent;
+        width: 125px;
+        height: 170px;
+        /* border: 1px solid #000000; */
+        perspective: 1000px;
+    }
+
+    .card-inner {
+        position: relative;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+
+    .card-flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100% !important;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+        object-fit: cover !important;
+    }
+
+    .card-front {
+        object-fit: cover !important;
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+    }
+
+    .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill !important;
+        margin: 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .row-card::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+</style>
+{% endblock %}

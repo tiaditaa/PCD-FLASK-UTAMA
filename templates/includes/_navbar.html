@@ -1,0 +1,51 @@
+<nav class="navbar cust-navbar navbar-expand-lg navbar-dark pt-3 pb-3">
+    <a class="navbar-brand navbar-brand-custom ml-5" href="/"><h4 class="mt-1 ml-3">DIMP | PeCeDe</h4></a>
+    <button class="navbar-toggler mr-5" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="" role="button" ><i class="fa fa-bars" aria-hidden="true" style="color:#e6e6ff"></i></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav navbar-item-custom ml-auto">
+            <li class="dropdown-divider mr-5"></li>
+            <li class="nav-item navbar-list-custom active"  >
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="dropdown-divider mr-5"></li>
+            <li class="nav-item navbar-list-custom mr-4">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="dropdown-divider mr-5"></li>
+        </ul>
+    </div>
+</nav>
+
+<style>
+    /* Add CSS for the sticky navbar */
+    .cust-navbar {
+        top: 0;
+        margin: 0 !important;
+        padding: 12px 0 12px 0 !important;
+        background-color: #58baff;
+    }
+
+    .cust-navbar * {
+        color: black !important;
+    }
+
+    /* Adjust the height of the navbar when collapsed */
+    .cust-navbar .navbar-collapse {
+        transition: height 0.3s ease-in-out;
+    }
+
+    .navbar-brand-custom {
+        font-size: 21px;
+    }
+
+    .navbar-item-custom {
+        padding-left: 36px;
+    }
+
+    .navbar-list-custom {
+        padding-left: 16px;
+    }
+</style>
