@@ -9,27 +9,6 @@
         <div class="menu-right-part col-md-9">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
-                    
-                    <!-- IF POST METHOD IS TRIGGERED
-
-                    <div class="row">
-                        <h2 class="mt-3">Digit Detection - Upload Image</h2>
-                    </div>
-                    <div>
-                        <hr/>
-                    </div>
-                    <div class="row">
-                        <div class="container mt-5 ml-4 mr-4">
-                            <p class="lead text-center" style="font-size: 20pt;"> Silakan upload gambar digit Anda melalui bagian di bawah ini.</p>
-                            <form id="uploadForm" action="{{ url_for('digit_detection') }}" method="POST" enctype="multipart/form-data" class="border border-secondary rounded p-3 mx-auto w-75 d-flex justify-content-between align-items-center">
-                                <input name="file" type="file" id="inputGroupFileDigit" accept="image/*" required>
-                                <button type="submit" class="btn btn-primary" id="btn-upload-img">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- END OF IF POST METHOD IS TRIGGERED-->
-                    
                     <div class="row">
                         <h2 class="mt-3">Digit Detection - Result</h2>
                     </div>
@@ -38,18 +17,14 @@
                     </div>
                     <div class="row">
                         <div class="container mt-5 ml-4 mr-4">
-                            {% for image_path, result in zipped_data %}
                             <div class="row">
-                                {% for img in image_path %}
-                                    <img src="{{ img }}" alt="Digit Image">
-                                {% endfor %}
-                                <br>
-                                <div class="col-md-6" style="display: flex; align-items: center;">
-                                    <p>Detected Result: {{ result }}</p>
+                                <div class="col-md-6">
+                                    <img src="{{ url_for('static', filename=result['image_path'].split('static/')[-1]) }}" alt="Combined Digit Image" class="img-fluid">
+                                </div>
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <p>Detected Result: {{ result['detected_digits'] }}</p>
                                 </div>
                             </div>
-                            <br>
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -99,9 +74,9 @@
 </script>
 
 <script>
-    // take one element div called class "card-header" and checked if its clicked or not.
-    // If clicked, the left border should always still there by adding classlist active
-    // until the user click another menu
+    // Take one element div called class "card-header" and check if it's clicked or not.
+    // If clicked, the left border should always still be there by adding classlist active
+    // until the user clicks another menu
     const cardHeader = document.querySelectorAll('.card-header');
 
     cardHeader.forEach((header) => {
@@ -114,7 +89,6 @@
             header.classList.add('active-header');
         });
     });
-
 </script>
 
 <style>
@@ -130,7 +104,7 @@
         overflow-y: auto; /* Enable vertical scrolling */
     }
 
-    .menu-right-part  .container:hover {
+    .menu-right-part .container:hover {
         overflow-y: auto;
         scrollbar-width: 4px;
     }

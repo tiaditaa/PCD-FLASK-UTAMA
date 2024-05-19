@@ -30,482 +30,15 @@
                                     <form action="{{ url_for('grayscale') }}" method="POST" enctype="multipart/form-data">
                                         <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Grayscale</span></button>
                                     </form>
-                                    <form action="{{ url_for('zoomin') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Zoom in</span></button>
-                                    </form>
-                                    <form action="{{ url_for('zoomout') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Zoom out</span></button>
+                                    <form action="{{ url_for('binary') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Binary</span></button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="pergeseran-accordion">
-                        <div class="card">
-                            <div class="card-header" id="pergeseran-heading">
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#pergeseran-menu" aria-expanded="false" aria-controls="pergeseran-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
+                </div>                
 
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Pergeseran</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                            </div>
-                
-                            <div id="pergeseran-menu" class="collapse" aria-labelledby="pergeseran-heading" data-parent="#pergeseran-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('move_left') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Geser Kiri</span></button>
-                                    </form>
-                                    <form action="{{ url_for('move_right') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Geser Kanan</span></button>
-                                    </form>
-                                    <form action="{{ url_for('move_up') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Geser Atas</span></button>
-                                    </form>
-                                    <form action="{{ url_for('move_down') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Geser Bawah</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="penerangan-accordion">
-                        <div class="card">
-                            <div class="card-header" id="penerangan-heading">
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#penerangan-menu"
-                                        aria-expanded="false" aria-controls="penerangan-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Penerangan</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                            </div>
-                
-                            <div id="penerangan-menu" class="collapse" aria-labelledby="penerangan-heading"
-                                data-parent="#penerangan-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('brightness_multiplication') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Terang (*)</span></button>
-                                    </form>
-                                    <form action="{{ url_for('brightness_division') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Gelap (/)</span></button>
-                                    </form>
-                                    <form action="{{ url_for('brightness_addition') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Terang (+)</span></button>
-                                    </form>
-                                    <form action="{{ url_for('brightness_substraction') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Gelap (-)</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="analisis-accordion">
-                        <div class="card">
-                            <div class="card-header" id="analisis-heading">
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#analisis-menu" aria-expanded="false" aria-controls="analisis-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Analisis Gambar</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                            </div>
-                
-                            <div id="analisis-menu" class="collapse" aria-labelledby="analisis-heading" data-parent="#analisis-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('histogram_rgb') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Histogram</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="pemrosesan-accordion">
-                        <div class="card">
-                            <div class="card-header" id="pemrosesan-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#pemrosesan-menu" aria-expanded="false" aria-controls="pemrosesan-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Pemrosesan Gambar</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-                
-                            <div id="pemrosesan-menu" class="collapse" aria-labelledby="pemrosesan-heading" data-parent="#pemrosesan-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('histogram_equalizer') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Histogram Equalizer</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="filter-accordion">
-                        <div class="card">
-                            <div class="card-header" id="filter-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#filter-menu" aria-expanded="false" aria-controls="filter-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Filter Gambar</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-                
-                            <div id="filter-menu" class="collapse" aria-labelledby="filter-heading" data-parent="#filter-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('edge_detection') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Edge Detection</span></button>
-                                    </form>
-                                    <form action="{{ url_for('blur') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Blur</span></button>
-                                    </form>
-                                    <form action="{{ url_for('sharpening') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Sharpening</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>                        
-
-                <div class="col-md-12 mb-5 text-center menu-section">
-                    <div class="accordion" id="segmentation-accordion">
-                        <div class="card">
-                            <div class="card-header" id="segmentation-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#segmentation-menu" aria-expanded="false" aria-controls="segmentation-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Thresholding Segmentation</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-
-                            <div id="segmentation-menu" class="collapse" aria-labelledby="segmentation-heading" data-parent="#segmentation-accordion">
-                                <div class="card-body">
-                                    <form id="segmentation-action-form" method="POST" enctype="multipart/form-data">
-                                        <div class="form-row align-items-center">
-                                            <div class="col-md-6 col-lg-12 mb-2 mx-auto">
-                                                <label for="lower_thres" class="sr-only">Lower Threshold</label>
-                                                <div class="input-group">
-                                                    <div class="mr-1 pt-2 pr-2 col-lg-4">
-                                                        <span class="text-muted">From</span>
-                                                    </div>
-                                                    <input type="number" name="lower_thres" id="lower_thres" placeholder="0-255" class="form-control col-lg-8" min="0" max="255" required autocomplete="off">
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please enter a value between 0 and 255.
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5 col-lg-12 mb-2 mx-auto">
-                                                <label for="upper_thres" class="sr-only">Upper Threshold</label>
-                                                <div class="input-group">
-                                                    <div class="mr-1 pt-2 pr-2 col-lg-4">
-                                                        <span class="text-muted">To </span>
-                                                    </div>
-                                                    <input type="number" name="upper_thres" id="upper_thres" placeholder="0-255" class="form-control col-lg-8" min="0" max="255" required autocomplete="off">
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please enter a value between 0 and 255.
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mt-3 mb-2 mx-auto">
-                                                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Script for SEGMENTATION GAMBAR menu-->
-                <script>
-                    // Get references to the form and input elements
-                    const segmentationForm = document.getElementById("segmentation-action-form");
-
-                    // Add an event listener to the form
-                    segmentationForm.addEventListener("submit", function (e) {
-                        // Prevent the default form submission
-                        e.preventDefault();
-                
-                        // Get the values from the input fields
-                        const lowerThresholdValue = document.getElementById("lower_thres").value;
-                        const upperThresholdValue = document.getElementById("upper_thres").value;
-                
-                        // Set the form's action attribute with query parameters
-                        segmentationForm.action = `/thresholding?lower_thres=${lowerThresholdValue}&upper_thres=${upperThresholdValue}`;
-                
-                        // Submit the form programmatically
-                        segmentationForm.submit();
-                    });
-                </script>
-                
-                <div class="col-md-12 mb-5 text-center menu-section">
-                    <div class="accordion" id="puzzling-accordion">
-                        <div class="card">
-                            <div class="card-header" id="puzzling-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#puzzling-menu" aria-expanded="false" aria-controls="puzzling-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Puzzling</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-
-                            <div id="puzzling-menu" class="collapse" aria-labelledby="puzzling-heading" data-parent="#puzzling-accordion">
-                                <div class="card-body">
-                                    <form id="puzzling-action-form" method="POST" enctype="multipart/form-data">
-                                        <div class="form-row align-items-center">
-                                            <div class="col-md-6 col-lg-12 mb-2 mx-auto">
-                                                <label for="ordered_puzzle_num" class="sr-only">Jumlah Potongan Berurutan</label>
-                                                <div class="input-group">
-                                                    <div class="mr-1 pt-2 pr-2 col-lg-12">
-                                                        <span class="text-muted">Jml (ordered)</span>
-                                                    </div>
-                                                    <input type="number" name="ordered_puzzle_num" id="ordered_puzzle_num" placeholder="0-255" class="form-control col-lg-12" min="0" max="200" required autocomplete="off" value="0">
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please enter a value between 0 and 200.
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5 col-lg-12 mb-2 mx-auto">
-                                                <label for="unordered_puzzle_num" class="sr-only">Jml Potongan Tak Berurutan</label>
-                                                <div class="input-group">
-                                                    <div class="mr-1 pt-2 pr-2 col-lg-12">
-                                                        <span class="text-muted">Jml (Unordered)</span>
-                                                    </div>
-                                                    <input type="number" name="unordered_puzzle_num" id="unordered_puzzle_num" placeholder="0-255" class="form-control col-lg-12" min="0" max="200" required autocomplete="off" value="0">
-                                                </div>
-                                                <div class="invalid-feedback">
-                                                    Please enter a value between 0 and 200.
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 mt-3 mb-2 mx-auto">
-                                                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Script for PUZZLING menu-->
-                <script>
-                    // Get references to the form and input elements
-                    const puzzlingForm = document.getElementById("puzzling-action-form");
-
-                    // Add an event listener to the form
-                    puzzlingForm.addEventListener("submit", function (e) {
-                        // Prevent the default form submission
-                        e.preventDefault();
-                
-                        // Get the values from the input fields
-                        var orderedTilesNum = document.getElementById("ordered_puzzle_num").value;
-                        var unorderedTilesNum = document.getElementById("unordered_puzzle_num").value;
-                
-                        // Determine the action based on input values
-                        if (orderedTilesNum > 0 && unorderedTilesNum == 0) {
-                            puzzlingForm.action = `/puzzling_ordered`;
-                        } else if (unorderedTilesNum > 0 && orderedTilesNum == 0) {
-                            puzzlingForm.action = `/puzzling_unordered`;
-                        } else {
-                            // Handle the case where both inputs are zero or not valid
-                            alert("Please enter a valid number of tiles.");
-                            return; // Prevent form submission
-                        }
-                
-                        // Submit the form programmatically
-                        puzzlingForm.submit();
-                    });
-                </script>
-
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="detail-rgb-accordion">
-                        <div class="card">
-                            <div class="card-header" id="detail-rgb-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#detail-rgb-menu" aria-expanded="false" aria-controls="detail-rgb-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Detail Gambar</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-
-                            <div id="detail-rgb-menu" class="collapse" aria-labelledby="detail-rgb-heading" data-parent="#detail-rgb-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('display_rgb_values') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Detail Ukuran dan Pixel</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="spatial-filter-accordion">
-                        <div class="card">
-                            <div class="card-header" id="spatial-filter-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#spatial-filter-menu" aria-expanded="false" aria-controls="spatial-filter-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Filter Spasial</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-                
-                            <div id="spatial-filter-menu" class="collapse" aria-labelledby="spatial-filter-heading" data-parent="#spatial-filter-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    
-                                    <form action="{{ url_for('kernel_configuration') }}" method="GET" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Configure Custom Filter Kernel</span></button>
-                                    </form>
-                                    <form action="{{ url_for('gaussian_blur') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Gaussian Blur</span></button>
-                                    </form>
-                                    <form action="{{ url_for('median_blur') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Median Blur</span></button>
-                                    </form>
-                                    <form action="{{ url_for('bilateral_filter') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Bilateral Filter</span></button>
-                                    </form>
-                                    <form action="{{ url_for('blur_cv') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">CV Blur</span></button>
-                                    </form>
-                                    <form action="{{ url_for('zero_padding_cv') }}" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Zero Padding CV</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 mb-5 menu-section">
-                    <div class="accordion" id="matching-filter-accordion">
-                        <div class="card">
-                            <div class="card-header" id="matching-filter-heading">
-                                
-                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#matching-filter-menu" aria-expanded="false" aria-controls="matching-filter-menu">
-                                        <div class="row">
-                                            <div class="spacing-button col-md-1">
-
-                                            </div>
-                                            <div class="menu-text-areas col-md-8">
-                                                <span style="white-space: normal;">Matching Game</span>
-                                            </div>
-                                            <div class="icon-arrow col-md-2">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                            </div>
-                                        </div>
-                                    </button>
-                                
-                            </div>
-                            <div id="matching-filter-menu" class="collapse" aria-labelledby="matching-filter-heading" data-parent="#matching-filter-accordion">
-                                <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('matching_game') }}" method="GET" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">New Game</span></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="col-md-12 mb-5 menu-section">
                     <div class="accordion" id="morphology-operation-accordion">
@@ -529,14 +62,48 @@
                             </div>
                             <div id="morphology-operation-menu" class="collapse" aria-labelledby="morphology-operation-heading" data-parent="#morphology-operation-accordion">
                                 <div class="card-body" style="padding: 0px !important;">
-                                    <form action="{{ url_for('morphological_operations_1') }}" method="GET" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Soal 1 - Gerigi</span></button>
+                                    <form action="{{ url_for('dilasi') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Dilasi</span></button>
                                     </form>
-                                    <form action="{{ url_for('morphological_operations_2') }}" method="GET" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Soal 2 - Blob Line and Dots</span></button>
+                                    <form action="{{ url_for('erosi') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Erosi</span></button>
                                     </form>
-                                    <form action="{{ url_for('morphological_operations_3') }}" method="GET" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Soal 3</span></button>
+                                    <form action="{{ url_for('opening') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Opening</span></button>
+                                    </form>
+                                    <form action="{{ url_for('closing') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Closing</span></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-5 menu-section">
+                    <div class="accordion" id="count-detection-accordion">
+                        <div class="card">
+                            <div class="card-header" id="count-detection-heading">
+                                
+                                    <button class="btn btn-link col-md-11" type="button" data-toggle="collapse" data-target="#count-detection-menu" aria-expanded="false" aria-controls="count-detection-menu">
+                                        <div class="row">
+                                            <div class="spacing-button col-md-1">
+
+                                            </div>
+                                            <div class="menu-text-areas col-md-8">
+                                                <span style="white-space: normal;">Count Object</span>
+                                            </div>
+                                            <div class="icon-arrow col-md-2">
+                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </button>
+                                
+                            </div>
+                            <div id="count-detection-menu" class="collapse" aria-labelledby="count-detection-heading" data-parent="#count-detection-accordion">
+                                <div class="card-body" style="padding: 0px !important;">
+                                    <form action="{{ url_for('countObject') }}" method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-outline-primary col-md-12"><span style="white-space: normal;">Hasil</span></button>
                                     </form>
                                 </div>
                             </div>
@@ -574,6 +141,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
