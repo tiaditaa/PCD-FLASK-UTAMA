@@ -149,8 +149,29 @@ def digit_detection():
         "detected_digits": detected_digits
     }
 
-
     return render_template("digit-detection.html", result=result)
+
+@app.route("/emoji-detection", methods=["GET"])
+@nocache
+def emoji_detection():
+    # Path to the folder containing emoji images
+    emoji_folder = "static/img/emoji"
+
+    # Generate paths for all images in the emoji directory
+    emoji_paths = {file.split('.')[0]: os.path.join(emoji_folder, file).replace('\\', '/')
+                   for file in os.listdir(emoji_folder) if file.endswith('.png')}
+
+    # Predict and display expressions for all emojis
+    predictions = {}
+    for name, path in emoji_paths.items():
+        emoji_img = Image.open(path)
+        # Assume you have defined image_processing.predict_emoji function
+        hog_features = image_processing.extract_hog_features(path)
+        prediction = image_processing.predict_emoji(path)  # Fix the parameter to path
+        # Store image path in predictions
+        predictions[name] = {"image": emoji_img, "prediction": prediction, "image_path": path}
+
+    return render_template("emoji-detection.html", predictions=predictions)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
