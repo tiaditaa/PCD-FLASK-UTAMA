@@ -1,3 +1,4 @@
+import joblib
 import numpy as np
 from PIL import Image
 import matplotlib
@@ -9,9 +10,15 @@ import multiprocessing
 from collections import Counter
 from pylab import savefig
 import cv2
-
+from skimage.feature import hog
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import train_test_split
 from skimage.morphology import skeletonize
 import os
+from sklearn.pipeline import make_pipeline
+from joblib import dump 
 
 # this function is used to convert the image to grayscale
 
@@ -341,3 +348,123 @@ def detect_digits_from_combined_image(image_path):
         detected_digits.append(str(detected_digit))
 
     return ''.join(detected_digits)
+
+# Define the eight possible directions in Freeman Chain Code
+DIRECTIONS = {
+    (0, 1): 0,
+    (-1, 1): 1,
+    (-1, 0): 2,
+    (-1, -1): 3,
+    (0, -1): 4,
+    (1, -1): 5,
+    (1, 0): 6,
+    (1, 1): 7,
+}
+
+# Function to preprocess image and find contours
+def preprocess_image(image_path):
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    blurred = cv2.GaussianBlur(image, (5, 5), 0)
+    binary = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                   cv2.THRESH_BINARY, 11, 2)
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    return contours
+
+# Function to generate Freeman Chain Code
+def freeman_chain_code(contour):
+    chain_code = []
+    for i in range(1, len(contour)):
+        delta = (contour[i][0][0] - contour[i - 1][0][0], contour[i][0][1] - contour[i - 1][0][1])
+        chain_code.append(DIRECTIONS.get(delta, -1))
+    return [code for code in chain_code if code != -1]
+
+# Function to normalize chain codes for rotation invariance
+def normalize_chain_code(chain_code):
+    min_code = chain_code
+    for i in range(len(chain_code)):
+        rotated = chain_code[i:] + chain_code[:i]
+        if rotated < min_code:
+            min_code = rotated
+    return min_code
+
+# Function to calculate the difference between two chain codes
+def chain_code_difference(code1, code2):
+    min_length = min(len(code1), len(code2))
+    difference = sum(1 for i in range(min_length) if code1[i] != code2[i])
+    difference += abs(len(code1) - len(code2))  # Account for length differences
+    return difference
+
+# Function to extract HOG features from an image
+def extract_hog_features(image_path):
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    resized_image = cv2.resize(image, (64, 64))  # Resize to a fixed size
+    hog_features, _ = hog(resized_image, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                          block_norm='L2-Hys', visualize=True)
+    return hog_features
+
+emoji_dir = "static/img/emoji"
+
+def train_emoji_model():
+    # Membuat list untuk menyimpan fitur HOG dan label emoji
+    hog_features = []
+    labels = []
+
+    # Mendapatkan daftar nama file emoji di direktori
+    emoji_files = os.listdir(emoji_dir)
+
+    # Mendefinisikan parameter HOG
+    orientations = 9
+    pixels_per_cell = (8, 8)
+    cells_per_block = (2, 2)
+
+    # Mengambil fitur HOG dan label dari setiap gambar emoji
+    for emoji_file in emoji_files:
+        # Mendapatkan label emoji dari nama file (misalnya, "happy.png" menjadi "happy")
+        label = os.path.splitext(emoji_file)[0]
+        labels.append(label)
+        
+        # Membaca gambar emoji dan mengonversinya ke grayscale
+        emoji_img = Image.open(os.path.join(emoji_dir, emoji_file)).convert("L")
+        
+        # Menghitung fitur HOG dari gambar emoji
+        hog_feature = hog(emoji_img, orientations=orientations, pixels_per_cell=pixels_per_cell, cells_per_block=cells_per_block)
+        hog_features.append(hog_feature)
+
+    # Mengubah list menjadi array numpy
+    X = np.array(hog_features)
+    y = np.array(labels)
+
+    # Membuat pipeline untuk pemrosesan standar dan model SVM
+    pipeline = make_pipeline(StandardScaler(), SVC(kernel='linear', probability=True))
+
+    # Melatih model SVM
+    pipeline.fit(X, y)
+
+    # Menyimpan model yang dilatih sebagai file .pkl
+    model_path = "static/img/emoji_model.pkl"
+    dump(pipeline, model_path)
+    
+    print("Model emoji berhasil dilatih dan disimpan sebagai", model_path)
+
+# Fungsi untuk memuat model emoji yang telah dilatih
+def load_emoji_model():
+    model_path = "static/img/emoji_model.pkl"
+    if os.path.exists(model_path):
+        return joblib.load(model_path)
+    else:
+        print("Model emoji belum dilatih. Silakan latih model terlebih dahulu.")
+        return None
+
+# Fungsi untuk memprediksi emoji dari gambar menggunakan model yang telah dilatih
+def predict_emoji(image_path):
+    model = load_emoji_model()
+    if model:
+        # Baca gambar dan hitung fitur HOG
+        emoji_img = Image.open(image_path).convert("L")
+        hog_feature = hog(emoji_img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
+        
+        # Lakukan prediksi menggunakan model
+        predicted_emoji = model.predict([hog_feature])[0]
+        return predicted_emoji
+    else:
+        return None

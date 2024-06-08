@@ -8,6 +8,12 @@ from datetime import datetime
 from functools import wraps, update_wrapper
 from shutil import copyfile
 import glob
+from flask import Flask, render_template, Response
+import cv2
+from face_swap import get_landmarks, apply_delaunay_triangulation
+import numpy as np
+import os
+from PIL import Image
 
 app = Flask(__name__) # Create a Flask object called "app" (__name__ is a special variable in Python)
 app.secret_key = 'yEsyDNtBpySf#2023'  # Set a secret key for session management
@@ -149,8 +155,85 @@ def digit_detection():
         "detected_digits": detected_digits
     }
 
-
     return render_template("digit-detection.html", result=result)
+
+@app.route("/emoji-detection", methods=["GET"])
+@nocache
+def emoji_detection():
+    # Path to the folder containing emoji images
+    emoji_folder = "static/img/emoji"
+
+    # Generate paths for all images in the emoji directory
+    emoji_paths = {file.split('.')[0]: os.path.join(emoji_folder, file).replace('\\', '/')
+                   for file in os.listdir(emoji_folder) if file.endswith('.png')}
+
+    # Predict and display expressions for all emojis
+    predictions = {}
+    for name, path in emoji_paths.items():
+        emoji_img = Image.open(path)
+        # Assume you have defined image_processing.predict_emoji function
+        hog_features = image_processing.extract_hog_features(path)
+        prediction = image_processing.predict_emoji(path)  # Fix the parameter to path
+        # Store image path in predictions
+        predictions[name] = {"image": emoji_img, "prediction": prediction, "image_path": path}
+
+    return render_template("emoji-detection.html", predictions=predictions)
+
+
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
+# Ensure the upload folder exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Global variables for the uploaded image and landmarks
+uploaded_image = None
+uploaded_landmarks = None
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/upload_image', methods=['POST'])
+def upload_image():
+    global uploaded_image, uploaded_landmarks
+    file = request.files['file']
+    if file:
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(image_path)
+        uploaded_image = cv2.imread(image_path)
+        uploaded_landmarks = get_landmarks(uploaded_image)
+        if uploaded_landmarks is None:
+            return "Error: Tidak dapat mendeteksi landmark pada gambar yang diupload.", 400
+        return redirect(url_for('video_stream'))
+    return "No file uploaded", 400
+
+# Video capture from webcam
+cap = cv2.VideoCapture(0)
+
+def generate_frames():
+    global uploaded_image, uploaded_landmarks
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+
+        landmarks2 = get_landmarks(frame)
+        if landmarks2 is not None and uploaded_landmarks is not None:
+            frame = apply_delaunay_triangulation(uploaded_image, frame, uploaded_landmarks, landmarks2)
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_stream')
+def video_stream():
+    return render_template('video_stream.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
