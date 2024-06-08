@@ -179,6 +179,7 @@ def emoji_detection():
 
     return render_template("emoji-detection.html", predictions=predictions)
 
+<<<<<<< HEAD
 
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
@@ -235,5 +236,7 @@ def video_stream():
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+=======
+>>>>>>> 7a1080a1ffdf6a77ff87cba5540a9c9aef3c897a
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
